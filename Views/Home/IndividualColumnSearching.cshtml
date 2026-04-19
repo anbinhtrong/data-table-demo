@@ -1,0 +1,182 @@
+﻿@{
+    ViewData["Title"] = "Individual Column Searching";
+}
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+    <p class="text-muted">Demo: DataTables with Individual Column Searching using Select Inputs</p>
+
+    <div class="card">
+        <div class="card-body">
+            <table id="columnSearchTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Rating</th>
+                        <th>Status</th>
+                        <th>Date Added</th>
+                        <th>Supplier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#columnSearchTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetProducts", "Home")',
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'name' },
+                    { data: 'category' },
+                    { data: 'price', render: function (data) { return '$' + parseFloat(data).toFixed(2); } },
+                    { data: 'stock' },
+                    { data: 'rating' },
+                    { data: 'status' },
+                    { data: 'dateAdded' },
+                    { data: 'supplier' }
+                ],
+                processing: true,
+                serverSide: false,
+                paging: true,
+                pageLength: 10,
+                ordering: true,
+                searching: true,
+                info: true,
+                lengthChange: true,
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                     '<"row"<"col-sm-12"tr>>' +
+                     '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                initComplete: function () {
+                    this.api().columns().every(function (colIndex) {
+                        var column = this;
+                        var header = $(column.header());
+                        var columnTitle = header.text();
+
+                        // Only create filter for Category (index 2) and Status (index 6)
+                        if (colIndex === 2 || colIndex === 6) {
+                            // Create dropdown filter structure
+                            var dropdownId = 'filter-' + columnTitle.replace(/\s+/g, '-').toLowerCase();
+                            var filterHtml = `
+                                <div class="dropdown d-inline-block filter-container ms-2">
+                                    <i class="bi bi-caret-down-fill filter-icon" data-bs-toggle="dropdown" aria-expanded="false" title="Filter by ${columnTitle}"></i>
+                                    <ul class="dropdown-menu shadow-lg" id="${dropdownId}">
+                                        <li><a class="dropdown-item filter-option" href="#" data-value="">All ${columnTitle}</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    </ul>
+                                </div>`;
+
+                            var $filter = $(filterHtml);
+                            header.html(columnTitle).append($filter);
+
+                            // Get unique values and populate dropdown
+                            column.data().unique().sort().each(function (d) {
+                                $filter.find('.dropdown-menu').append(
+                                    `<li><a class="dropdown-item filter-option" href="#" data-value="${d}">${d}</a></li>`
+                                );
+                            });
+
+                            // Handle dropdown option click
+                            $filter.find('.filter-option').on('click', function (e) {
+                                e.preventDefault();
+                                var val = $(this).data('value');
+                                var $icon = $(this).closest('.dropdown').find('.filter-icon');
+
+                                // Highlight icon if filter is active
+                                if (val !== "") {
+                                    $icon.addClass('text-warning');
+                                } else {
+                                    $icon.removeClass('text-warning');
+                                }
+
+                                // Apply filter with exact match regex
+                                column.search(val ? '^' + $.fn.dataTable.util.escapeRegex(val) + '$' : '', true, false).draw();
+                            });
+
+                            // Prevent sort trigger when clicking filter
+                            $filter.on('click', function (e) {
+                                e.stopPropagation();
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <style>
+        #columnSearchTable thead {
+            background-color: #f8f9fa;
+        }
+
+        #columnSearchTable thead th {
+            padding: 12px;
+            border-bottom: 2px solid #dee2e6;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .filter-icon {
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+
+        .filter-icon:hover {
+            color: #495057;
+        }
+
+        .filter-icon.text-warning {
+            color: #ffc107;
+        }
+
+        .filter-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        #columnSearchTable .dropdown-menu {
+            max-height: 300px;
+            overflow-y: auto;
+            min-width: 180px;
+        }
+
+        #columnSearchTable .dropdown-item {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        #columnSearchTable .dropdown-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            margin-top: 15px;
+        }
+    </style>
+}

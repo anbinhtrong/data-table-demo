@@ -1,0 +1,279 @@
+@{
+    ViewData["Title"] = "Fixed Column Demo";
+}
+
+<div class="container-fluid mt-5">
+    <h1>Fixed Column Demo</h1>
+    <p class="text-muted">DataTable with fixed first and last columns while scrolling horizontally</p>
+
+    <div id="fixedColumnWrapper">
+        <table id="fixedColumnTable" class="display compact">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Date Added</th>
+                    <th>Supplier</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>001</td>
+                    <td>Apple</td>
+                    <td>Fruit</td>
+                    <td>$10</td>
+                    <td>150</td>
+                    <td>4.5</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-15</td>
+                    <td>Fresh Farms Inc</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Milk</td>
+                    <td>Dairy</td>
+                    <td>$20</td>
+                    <td>80</td>
+                    <td>4.8</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-14</td>
+                    <td>Dairy Corp</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>003</td>
+                    <td>Orange</td>
+                    <td>Fruit</td>
+                    <td>$8</td>
+                    <td>200</td>
+                    <td>4.3</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-13</td>
+                    <td>Citrus Growers</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>004</td>
+                    <td>Cheese</td>
+                    <td>Dairy</td>
+                    <td>$15</td>
+                    <td>45</td>
+                    <td>4.6</td>
+                    <td><span class="badge bg-warning">Low Stock</span></td>
+                    <td>2024-01-12</td>
+                    <td>Artisan Cheese Co</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>005</td>
+                    <td>Banana</td>
+                    <td>Fruit</td>
+                    <td>$5</td>
+                    <td>300</td>
+                    <td>4.4</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-11</td>
+                    <td>Tropical Fruit Ltd</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>006</td>
+                    <td>Yogurt</td>
+                    <td>Dairy</td>
+                    <td>$12</td>
+                    <td>120</td>
+                    <td>4.7</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-10</td>
+                    <td>Health Foods</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>007</td>
+                    <td>Carrot</td>
+                    <td>Vegetable</td>
+                    <td>$6</td>
+                    <td>250</td>
+                    <td>4.2</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-09</td>
+                    <td>Organic Veggies</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>008</td>
+                    <td>Butter</td>
+                    <td>Dairy</td>
+                    <td>$18</td>
+                    <td>60</td>
+                    <td>4.9</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-08</td>
+                    <td>Premium Dairy</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>009</td>
+                    <td>Broccoli</td>
+                    <td>Vegetable</td>
+                    <td>$7</td>
+                    <td>100</td>
+                    <td>4.1</td>
+                    <td><span class="badge bg-danger">Out of Stock</span></td>
+                    <td>2024-01-07</td>
+                    <td>Green Harvest</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>010</td>
+                    <td>Cream</td>
+                    <td>Dairy</td>
+                    <td>$25</td>
+                    <td>35</td>
+                    <td>4.8</td>
+                    <td><span class="badge bg-warning">Low Stock</span></td>
+                    <td>2024-01-06</td>
+                    <td>Luxury Dairy</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>011</td>
+                    <td>Grapes</td>
+                    <td>Fruit</td>
+                    <td>$12</td>
+                    <td>180</td>
+                    <td>4.6</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-05</td>
+                    <td>Vineyard Direct</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+                <tr>
+                    <td>012</td>
+                    <td>Spinach</td>
+                    <td>Vegetable</td>
+                    <td>$4</td>
+                    <td>220</td>
+                    <td>4.3</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                    <td>2024-01-04</td>
+                    <td>Fresh Greens Co</td>
+                    <td><button class="btn btn-sm btn-info">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-info mt-4">
+        <strong>💡 Note:</strong> The first column (ID) and last column (Action) are fixed and remain visible while scrolling horizontally through the table data.
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+
+    <style>
+        #fixedColumnWrapper {
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #fixedColumnTable {
+            width: 100%;
+            margin: 0;
+        }
+
+        #fixedColumnTable thead th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        #fixedColumnTable tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #fixedColumnTable tbody td {
+            padding: 10px 12px;
+            vertical-align: middle;
+        }
+
+        .dataTables_wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dataTables_wrapper .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_wrapper .dataTables_info {
+            padding-top: 10px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            padding-top: 10px;
+        }
+
+        /* Ensure fixed columns display properly */
+        div.dt-fixedcolumns-left,
+        div.dt-fixedcolumns-right {
+            z-index: 99;
+        }
+
+        div.dt-fixedcolumns-left {
+            left: 0;
+        }
+
+        div.dt-fixedcolumns-right {
+            right: 0;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#fixedColumnTable').DataTable({
+                scrollX: true,
+                scrollCollapse: false,
+                fixedColumns: {
+                    left: 1,
+                    right: 1
+                },
+                paging: true,
+                pageLength: 10,
+                lengthChange: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 9
+                    }
+                ]
+            });
+
+            // Reinitialize fixed columns after initialization
+            new $.fn.dataTable.FixedColumns(table, {
+                left: 1,
+                right: 1
+            });
+        });
+    </script>
+}

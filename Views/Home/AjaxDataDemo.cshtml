@@ -1,0 +1,196 @@
+@{
+    ViewData["Title"] = "Ajax Data Demo";
+}
+
+<div class="container-fluid mt-5">
+    <h1>Ajax Data Demo</h1>
+    <p class="text-muted">DataTable loading data from ASP.NET MVC server via Ajax</p>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <button id="reloadBtn" class="btn btn-primary">
+                <i class="bi bi-arrow-clockwise"></i> Reload Data
+            </button>
+        </div>
+        <div class="col-md-6 text-end">
+            <div id="loadingIndicator" class="spinner-border text-primary" role="status" style="display: none;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="ajaxTableWrapper">
+        <table id="ajaxDataTable" class="display compact">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Date Added</th>
+                    <th>Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-info mt-4">
+        <strong>💡 How it works:</strong>
+        <ul class="mb-0">
+            <li>Data is loaded from the server endpoint via Ajax (GET /Home/GetProducts)</li>
+            <li>The table is initialized empty and populated dynamically</li>
+            <li>Click "Reload Data" button to refresh the table from the server</li>
+            <li>Supports sorting, searching, and pagination on client-side</li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+    <style>
+        #ajaxTableWrapper {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #ajaxDataTable {
+            width: 100%;
+            margin: 0;
+        }
+
+        #ajaxDataTable thead th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        #ajaxDataTable tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #ajaxDataTable tbody td {
+            padding: 10px 12px;
+            vertical-align: middle;
+        }
+
+        .dataTables_wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dataTables_wrapper .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_wrapper .dataTables_info {
+            padding-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            padding-top: 10px;
+        }
+
+        .badge {
+            padding: 5px 8px;
+            font-size: 0.85rem;
+        }
+
+        #loadingIndicator {
+            margin-right: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            var table = null;
+
+            // Function to get status badge HTML
+            function getStatusBadge(status) {
+                var badgeClass = '';
+                if (status === 'In Stock') {
+                    badgeClass = 'bg-success';
+                } else if (status === 'Low Stock') {
+                    badgeClass = 'bg-warning';
+                } else if (status === 'Out of Stock') {
+                    badgeClass = 'bg-danger';
+                }
+                return '<span class="badge ' + badgeClass + '">' + status + '</span>';
+            }
+
+            // Function to load data via Ajax
+            function loadData() {
+                $('#loadingIndicator').show();
+
+                $.ajax({
+                    url: '/Home/GetProducts',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (table) {
+                            table.destroy();
+                        }
+
+                        // Clear tbody
+                        $('#ajaxDataTable tbody').empty();
+
+                        // Populate table with data
+                        $.each(response.data, function (index, product) {
+                            var row = $('<tr>').append(
+                                $('<td>').text(product.id),
+                                $('<td>').text(product.name),
+                                $('<td>').text(product.category),
+                                $('<td>').text('$' + product.price),
+                                $('<td>').text(product.stock),
+                                $('<td>').text(product.rating),
+                                $('<td>').html(getStatusBadge(product.status)),
+                                $('<td>').text(product.dateAdded),
+                                $('<td>').text(product.supplier)
+                            );
+                            $('#ajaxDataTable tbody').append(row);
+                        });
+
+                        // Reinitialize DataTable
+                        table = $('#ajaxDataTable').DataTable({
+                            paging: true,
+                            pageLength: 10,
+                            lengthChange: true,
+                            searching: true,
+                            ordering: true,
+                            info: true,
+                            responsive: false
+                        });
+
+                        $('#loadingIndicator').hide();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error loading data:', error);
+                        $('#loadingIndicator').hide();
+                        alert('Error loading data from server. Please try again.');
+                    }
+                });
+            }
+
+            // Load data on page load
+            loadData();
+
+            // Reload button click handler
+            $('#reloadBtn').click(function () {
+                loadData();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,157 @@
+@{
+    ViewData["Title"] = "DataTable Demo";
+}
+
+<div class="container mt-5">
+    <h1>DataTable Demo</h1>
+    <p class="text-muted">Interactive table with sorting, searching, and pagination</p>
+
+    <div class="table-responsive">
+        <table id="productTable" class="display">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Apple</td>
+                    <td>$10</td>
+                    <td>Fruit</td>
+                    <td>150</td>
+                    <td>4.5</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Milk</td>
+                    <td>$20</td>
+                    <td>Dairy</td>
+                    <td>80</td>
+                    <td>4.8</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Orange</td>
+                    <td>$8</td>
+                    <td>Fruit</td>
+                    <td>200</td>
+                    <td>4.3</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Cheese</td>
+                    <td>$15</td>
+                    <td>Dairy</td>
+                    <td>45</td>
+                    <td>4.6</td>
+                    <td><span class="badge bg-warning">Low Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Banana</td>
+                    <td>$5</td>
+                    <td>Fruit</td>
+                    <td>300</td>
+                    <td>4.4</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Yogurt</td>
+                    <td>$12</td>
+                    <td>Dairy</td>
+                    <td>120</td>
+                    <td>4.7</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Carrot</td>
+                    <td>$6</td>
+                    <td>Vegetable</td>
+                    <td>250</td>
+                    <td>4.2</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Butter</td>
+                    <td>$18</td>
+                    <td>Dairy</td>
+                    <td>60</td>
+                    <td>4.9</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Broccoli</td>
+                    <td>$7</td>
+                    <td>Vegetable</td>
+                    <td>100</td>
+                    <td>4.1</td>
+                    <td><span class="badge bg-danger">Out of Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Cream</td>
+                    <td>$25</td>
+                    <td>Dairy</td>
+                    <td>35</td>
+                    <td>4.8</td>
+                    <td><span class="badge bg-warning">Low Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Grapes</td>
+                    <td>$12</td>
+                    <td>Fruit</td>
+                    <td>180</td>
+                    <td>4.6</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Spinach</td>
+                    <td>$4</td>
+                    <td>Vegetable</td>
+                    <td>220</td>
+                    <td>4.3</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Cheese Spread</td>
+                    <td>$22</td>
+                    <td>Dairy</td>
+                    <td>50</td>
+                    <td>4.5</td>
+                    <td><span class="badge bg-warning">Low Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Watermelon</td>
+                    <td>$15</td>
+                    <td>Fruit</td>
+                    <td>90</td>
+                    <td>4.7</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+                <tr>
+                    <td>Tomato</td>
+                    <td>$5</td>
+                    <td>Vegetable</td>
+                    <td>310</td>
+                    <td>4.2</td>
+                    <td><span class="badge bg-success">In Stock</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#productTable').DataTable();
+        });
+    </script>
+}

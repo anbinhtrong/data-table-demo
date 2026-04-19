@@ -1,0 +1,212 @@
+@{
+    ViewData["Title"] = "Server-Side Load Demo";
+}
+
+<div class="container-fluid mt-5">
+    <h1>Server-Side Data Loading Demo</h1>
+    <p class="text-muted">DataTable with server-side processing - pagination, search, and sorting handled by the server</p>
+
+    <div class="alert alert-warning mb-4">
+        <strong>⚙️ How Server-Side Processing Works:</strong>
+        <ul class="mb-0 mt-2">
+            <li><strong>Efficient for large datasets:</strong> Server processes pagination, sorting, and filtering before returning data</li>
+            <li><strong>Reduced bandwidth:</strong> Only requested records are sent to the client</li>
+            <li><strong>Request parameters sent by DataTables:</strong> draw, start, length, search[value], order[0][column], order[0][dir]</li>
+            <li><strong>Server response:</strong> draw, recordsTotal, recordsFiltered, data</li>
+        </ul>
+    </div>
+
+    <div id="serverSideTableWrapper">
+        <table id="serverSideTable" class="display compact">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Date Added</th>
+                    <th>Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-info mt-4">
+        <strong>💡 Features:</strong>
+        <ul class="mb-0">
+            <li>✅ All 20 sample products available on server</li>
+            <li>✅ Sort by clicking column headers</li>
+            <li>✅ Search across Name, Category, and Supplier</li>
+            <li>✅ Pagination handled server-side</li>
+            <li>✅ "Processing..." indicator shows while fetching</li>
+            <li>✅ Responsive and optimized for large datasets</li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.7/css/dataTables.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.7/js/dataTables.min.js"></script>
+
+    <style>
+        #serverSideTableWrapper {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #serverSideTable {
+            width: 100%;
+            margin: 0;
+        }
+
+        #serverSideTable thead th {
+            background-color: #28a745;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        #serverSideTable thead th:hover {
+            background-color: #218838;
+        }
+
+        #serverSideTable tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        #serverSideTable tbody td {
+            padding: 10px 12px;
+            vertical-align: middle;
+        }
+
+        .dataTables_wrapper {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dataTables_wrapper .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_wrapper .dataTables_info {
+            padding-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            padding-top: 10px;
+        }
+
+        .dataTables_wrapper .dataTables_processing {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 4px;
+            z-index: 1000;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            padding: 5px 8px;
+            font-size: 0.85rem;
+        }
+
+        /* Sorting indicator styles */
+        th.sorting,
+        th.sorting_asc,
+        th.sorting_desc {
+            position: relative;
+        }
+
+        th.sorting_asc::after,
+        th.sorting_desc::after {
+            content: '';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        th.sorting_asc::after {
+            content: ' ▲';
+        }
+
+        th.sorting_desc::after {
+            content: ' ▼';
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#serverSideTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "/Home/GetProductsServerSide",
+                    "type": "POST",
+                    "error": function (xhr, error, thrown) {
+                        console.error('Error:', error);
+                    }
+                },
+                "columns": [
+                    { "data": "id" },
+                    { "data": "name" },
+                    { "data": "category" },
+                    { "data": "price", "render": function (data) { return '$' + data.toFixed(2); } },
+                    { "data": "stock" },
+                    { "data": "rating" },
+                    { 
+                        "data": "status",
+                        "render": function (data) {
+                            var badgeClass = '';
+                            if (data === 'In Stock') {
+                                badgeClass = 'bg-success';
+                            } else if (data === 'Low Stock') {
+                                badgeClass = 'bg-warning';
+                            } else if (data === 'Out of Stock') {
+                                badgeClass = 'bg-danger';
+                            }
+                            return '<span class="badge ' + badgeClass + '">' + data + '</span>';
+                        }
+                    },
+                    { "data": "dateAdded" },
+                    { "data": "supplier" }
+                ],
+                "pageLength": 10,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "paging": true,
+                "language": {
+                    "processing": "Processing...",
+                    "paginate": {
+                        "first": "First",
+                        "last": "Last",
+                        "next": "Next",
+                        "previous": "Previous"
+                    }
+                }
+            });
+        });
+    </script>
+}
